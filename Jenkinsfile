@@ -1,7 +1,11 @@
-@Library('codeutils@master')
-
-def codeUtils = new org.opstree.java.javaCodePipeline()
-
-node{
-  codeUtils.call()
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
+    }
+  }
 }
